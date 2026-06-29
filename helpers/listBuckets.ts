@@ -1,4 +1,5 @@
 import { getApiKeys } from "./getKeys.ts";
+import process from "node:process";
 import { useDynamicSpinner } from "./reusableSpinner.ts";
 import { fail, dim, bold } from "./branding.ts";
 
@@ -34,7 +35,7 @@ const listBuckets = async () => {
       fail(
         `Failed to list buckets: ${(data as Record<string, unknown>).error ?? res.statusText}`,
       );
-      Deno.exit(1);
+      process.exit(1);
     }
 
     if (data.buckets.length === 0) {
@@ -60,7 +61,7 @@ const listBuckets = async () => {
   } catch (err) {
     spinner.stop();
     fail(`Could not fetch buckets from ${url}: ${(err as Error).message}`);
-    Deno.exit(1);
+    process.exit(1);
   }
 };
 

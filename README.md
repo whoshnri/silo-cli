@@ -1,4 +1,4 @@
-# @silo/cli
+# @whoshnri/silo CLI
 
 The command-line interface (CLI) for managing **Silo** — a self-hosted, lightweight key-value cache. 
 
@@ -11,7 +11,7 @@ Use this CLI to initialize accounts, manage buckets, rotate API keys, and view a
 ### Node.js (Global Installation)
 
 ```bash
-npm install -g @silo/cli
+npm install -g @whoshnri/silo
 ```
 
 Once installed, the `silo` command will be available globally.
@@ -21,7 +21,7 @@ Once installed, the `silo` command will be available globally.
 Install directly from JSR:
 
 ```bash
-deno install --allow-net --allow-read --allow-write --allow-env -n silo jsr:@silo/cli
+deno install --allow-net --allow-read --allow-write --allow-env -n silo jsr:@whoshnri/silo
 ```
 
 ---

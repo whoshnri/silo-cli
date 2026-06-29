@@ -1,4 +1,5 @@
 import { useDynamicSpinner } from "./reusableSpinner.ts";
+import process from "node:process";
 import { InputType } from "../main.ts";
 import { getApiKeys } from "./getKeys.ts";
 import { success, credential, separator, fail, dim } from "./branding.ts";
@@ -18,9 +19,9 @@ async function createNewBucket(name: string, description: string | undefined) {
 
   // Prompt for an optional description if one wasn't passed via --d flag
   if (!desc) {
-    const res = confirm("\nDo you want to add a description for your bucket?");
+    const res = (globalThis as any).confirm("\nDo you want to add a description for your bucket?");
     if (res) {
-      desc = prompt("\nDescribe your new bucket:");
+      desc = (globalThis as any).prompt("\nDescribe your new bucket:");
     } else {
       desc = "";
     }
@@ -41,14 +42,14 @@ async function createNewBucket(name: string, description: string | undefined) {
 
     // Read body once — the old code consumed res.json() twice which
     // would throw on the error path since the stream is already read
-    const data = (await res.json()) as BucketDetails;
+    const data = (await res.json()) as any;
     spinner.stop();
 
     if (!res.ok) {
       fail(
-        `Bucket creation failed: ${(data as Record<string, unknown>).error ?? res.statusText}`,
+        `Bucket creation failed: ${data.error ?? res.statusText}`,
       );
-      Deno.exit(1);
+      process.exit(1);
     }
 
     success(`Bucket created: ${name}`);
@@ -64,7 +65,7 @@ async function createNewBucket(name: string, description: string | undefined) {
   } catch (err) {
     spinner.stop();
     fail(`Could not create bucket at ${url}: ${(err as Error).message}`);
-    Deno.exit(1);
+    process.exit(1);
   }
 }
 

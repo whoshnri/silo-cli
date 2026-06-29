@@ -5,15 +5,15 @@ const openDocs = () => {
   const docsPath = new URL("../docs.html", import.meta.url).pathname;
   const html = Deno.readTextFileSync(docsPath);
 
-  if (typeof Deno.serve === "function") {
+  if (typeof (Deno as any).serve === "function") {
     // Standard Deno path
-    const server = Deno.serve({ port: 0, onListen({ port }) {
+    const server = (Deno as any).serve({ port: 0, onListen({ port }: { port: number }) {
       const url = `http://localhost:${port}`;
       console.log(dim(`\n  Serving docs at ${url}\n`));
 
       const cmd = Deno.build.os === "darwin"
-        ? new Deno.Command("open", { args: [url] })
-        : new Deno.Command("xdg-open", { args: [url] });
+        ? new (Deno as any).Command("open", { args: [url] })
+        : new (Deno as any).Command("xdg-open", { args: [url] });
 
       cmd.spawn();
     }}, () => {

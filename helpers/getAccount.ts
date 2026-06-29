@@ -1,4 +1,5 @@
 import { getApiKeys } from "./getKeys.ts";
+import process from "node:process";
 import { useDynamicSpinner } from "./reusableSpinner.ts";
 import { success, fail, dim, bold } from "./branding.ts";
 
@@ -21,12 +22,12 @@ const getAccount = async () => {
       },
     });
 
-    const data = await res.json();
+    const data = await res.json() as any;
     spinner.stop();
 
     if (!res.ok) {
       fail(`Could not fetch account: ${data.error ?? res.statusText}`);
-      Deno.exit(1);
+      process.exit(1);
     }
 
     const account = data as AccountInfo;
@@ -39,7 +40,7 @@ const getAccount = async () => {
   } catch (err) {
     spinner.stop();
     fail(`Could not reach ${url}: ${(err as Error).message}`);
-    Deno.exit(1);
+    process.exit(1);
   }
 };
 

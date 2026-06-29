@@ -1,4 +1,5 @@
 import { getBucketKeys } from "./getKeys.ts";
+import process from "node:process";
 import { useDynamicSpinner } from "./reusableSpinner.ts";
 import { success, credential, separator, fail, dim } from "./branding.ts";
 
@@ -22,12 +23,12 @@ const rotateKeys = async () => {
     );
 
     // Read body once — the old code consumed res.json() twice
-    const data = await res.json();
+    const data = await res.json() as any;
     spinner.stop();
 
     if (!res.ok) {
       fail(`Key rotation failed: ${data.error ?? res.statusText}`);
-      Deno.exit(1);
+      process.exit(1);
     }
 
     success("Keys rotated!");
@@ -43,7 +44,7 @@ const rotateKeys = async () => {
     fail(
       `Could not rotate bucket key at ${keys.url}: ${(err as Error).message}`,
     );
-    Deno.exit(1);
+    process.exit(1);
   }
 };
 

@@ -1,4 +1,5 @@
-import { Spinner } from "@std/cli/unstable-spinner";
+import { Spinner } from "./reusableSpinner.ts";
+import process from "node:process";
 import {
   printBanner,
   success,
@@ -26,7 +27,7 @@ export async function createAccount(url: string) {
     const newName = prompt("  What is your name?");
     if (!newName) {
       fail("A name is required.");
-      Deno.exit(1);
+      process.exit(1);
     }
     name = newName;
     nameRetries++;
@@ -34,13 +35,13 @@ export async function createAccount(url: string) {
 
   if (!name) {
     fail("Too many invalid name attempts.");
-    Deno.exit(1);
+    process.exit(1);
   }
 
   let email = prompt("  What is your email?");
   if (!email) {
     fail("An email is required.");
-    Deno.exit(1);
+    process.exit(1);
   }
 
   let emailRetries = 0;
@@ -50,7 +51,7 @@ export async function createAccount(url: string) {
     const newEmail = prompt("  What is your email?");
     if (!newEmail) {
       fail("An email is required.");
-      Deno.exit(1);
+      process.exit(1);
     }
     email = newEmail;
     emailRetries++;
@@ -58,7 +59,7 @@ export async function createAccount(url: string) {
 
   if (!verifyEmail(email)) {
     fail("Too many invalid email attempts.");
-    Deno.exit(1);
+    process.exit(1);
   }
 
   // const wantsChangelogs = confirm(
@@ -76,12 +77,12 @@ export async function createAccount(url: string) {
     });
 
     // Read body once — response can only be consumed a single time
-    const data = await res.json();
+    const data = await res.json() as any;
 
     if (!res.ok) {
       spinner.stop();
       fail(`Account creation failed: ${data.error ?? res.statusText}`);
-      Deno.exit(1);
+      process.exit(1);
     }
 
     spinner.stop();
@@ -99,6 +100,6 @@ export async function createAccount(url: string) {
   } catch (err) {
     spinner.stop();
     fail(`Could not reach ${url}: ${(err as Error).message}`);
-    Deno.exit(1);
+    process.exit(1);
   }
 }
